@@ -1,43 +1,42 @@
-# 🌐 Red Empresarial Segmentada
+# 🌐 Proyecto Red Empresarial Segmentada
 
 ## 📌 Descripción del proyecto
 
-Red Empresarial Segmentada es un proyecto académico orientado al diseño e implementación de una infraestructura de red empresarial mediante Cisco Packet Tracer.
+Proyecto académico orientado al diseño e implementación de una infraestructura de red empresarial mediante Cisco Packet Tracer.
 
-El proyecto utiliza segmentación lógica mediante VLAN para organizar los dispositivos por departamentos y servicios, permitiendo una administración más estructurada de la infraestructura de comunicaciones.
+La solución utiliza segmentación lógica mediante VLAN para organizar los dispositivos por departamentos y servicios. Incorpora enrutamiento inter-VLAN mediante un router Cisco 2911, switches Cisco 2960, enlaces troncales IEEE 802.1Q y servicios centralizados DHCP y DNS.
 
-La arquitectura contempla enrutamiento inter-VLAN mediante un router Cisco, enlaces troncales IEEE 802.1Q y servicios centralizados de DHCP y DNS.
+Además, contempla mecanismos de seguridad mediante listas de control de acceso (ACL), Port Security y protección inalámbrica WPA2-PSK.
 
 ## 🎯 Objetivos
 
-- Implementar una infraestructura de red segmentada mediante VLAN.
-- Organizar los dispositivos según las áreas de la organización.
-- Configurar el enrutamiento entre diferentes VLAN.
+- Diseñar una infraestructura de red empresarial segmentada.
+- Implementar seis VLAN para separar departamentos y servicios.
+- Configurar el enrutamiento inter-VLAN.
 - Centralizar la asignación de direcciones IP mediante DHCP.
 - Implementar resolución de nombres mediante DNS.
-- Configurar enlaces troncales entre los dispositivos de red.
-- Documentar las configuraciones de los equipos y servicios.
+- Establecer mecanismos de seguridad para controlar el acceso a la red.
+- Documentar las configuraciones y evidencias del proyecto.
 
 ## 🏗️ Arquitectura de red
 
-La infraestructura está compuesta por los siguientes dispositivos:
-
-| Dispositivo | Función |
+| Dispositivo | Modelo o función |
 |---|---|
-| R1-Central | Router principal encargado del enrutamiento inter-VLAN. |
-| SW-Core | Switch principal de distribución. |
-| SW1 | Switch de acceso. |
-| SW2 | Switch de acceso. |
-| SW3 | Switch de acceso. |
-| SRV-DHCP | Servidor de asignación dinámica de direcciones IP. |
-| SRV-DNS | Servidor de resolución de nombres. |
-| AP-WiFi | Punto de acceso para dispositivos inalámbricos. |
+| R1-Central | Router Cisco 2911. |
+| SW-Core | Switch Cisco 2960 principal. |
+| SW1 | Switch Cisco 2960. |
+| SW2 | Switch Cisco 2960. |
+| SW3 | Switch Cisco 2960. |
+| SRV-DHCP | Servidor DHCP. |
+| SRV-DNS | Servidor DNS. |
+| AP-WiFi | Punto de acceso Linksys WRT300N. |
+| Equipos finales | Computadores y portátiles de los diferentes departamentos. |
 
-## 🧩 Segmentación de red mediante VLAN
+## 🧩 Segmentación mediante VLAN
 
-La red se encuentra organizada en seis VLAN:
+La infraestructura está organizada en seis VLAN:
 
-| VLAN | Nombre | Red | Gateway |
+| VLAN | Nombre | Red | Puerta de enlace |
 |---|---|---|---|
 | 10 | Administración | 192.168.10.0/24 | 192.168.10.1 |
 | 20 | Docentes | 192.168.20.0/24 | 192.168.20.1 |
@@ -46,93 +45,85 @@ La red se encuentra organizada en seis VLAN:
 | 50 | Servidores | 192.168.50.0/24 | 192.168.50.1 |
 | 60 | Wi-Fi | 192.168.60.0/24 | 192.168.60.1 |
 
+El punto de acceso AP-WiFi proporciona conectividad inalámbrica para los dispositivos asociados a la VLAN 60.
+
+## 🔄 Enrutamiento inter-VLAN
+
+La comunicación entre las diferentes VLAN se implementa mediante el método Router-on-a-Stick.
+
+El router R1-Central utiliza subinterfaces con encapsulación IEEE 802.1Q para gestionar las seis VLAN y proporcionar sus respectivas puertas de enlace.
+
+Los switches utilizan enlaces troncales para transportar el tráfico de las VLAN correspondientes.
+
 ## 🖥️ Servicios de red
 
 ### DHCP
 
-El servicio DHCP se encuentra centralizado en el servidor SRV-DHCP.
+**Servidor:** SRV-DHCP  
+**Dirección IP:** `192.168.50.10`
 
-- Dirección IP: `192.168.50.10`
-- Función: asignación dinámica de direcciones IP a los dispositivos de las diferentes VLAN.
-- Se contempla DHCP Relay para comunicar las VLAN de usuarios con el servidor central.
+Se encarga de la asignación dinámica de direcciones IP a los dispositivos de las VLAN correspondientes. Se utiliza DHCP Relay para permitir que los clientes de otras VLAN utilicen el servidor centralizado.
 
 ### DNS
 
-El servicio DNS se encuentra en el servidor SRV-DNS.
+**Servidor:** SRV-DNS  
+**Dirección IP:** `192.168.50.11`
 
-- Dirección IP: `192.168.50.11`
-- Función: resolución de nombres dentro de la infraestructura de red.
+Proporciona el servicio de resolución de nombres dentro de la infraestructura.
 
-## 🔄 Enrutamiento inter-VLAN
+## 🔐 Seguridad de la red
 
-La comunicación entre las diferentes redes se realiza mediante el método Router-on-a-Stick.
+El proyecto contempla los siguientes mecanismos:
 
-El router R1-Central utiliza subinterfaces con encapsulación IEEE 802.1Q para gestionar las seis VLAN y proporcionar sus respectivas puertas de enlace.
+- **ACL (Access Control Lists):** permiten controlar y filtrar el tráfico entre VLAN según las reglas definidas.
+- **Port Security:** permite restringir el acceso a los puertos de los switches mediante controles sobre las direcciones MAC.
+- **WPA2-PSK:** mecanismo de protección de la conexión inalámbrica del punto de acceso.
+- **DHCP del AP-WiFi:** debe permanecer deshabilitado para que SRV-DHCP sea el único servidor encargado de distribuir direcciones IP en la infraestructura.
 
-## 📁 Estructura del proyecto
+Para guardar esta última configuración, se debe acceder a la interfaz gráfica del AP-WiFi, entrar en Setup, seleccionar DHCP Server: Disabled y guardar los cambios mediante Save Settings.
 
-```text
-Red_Empresarial_Segmentada/
-│
-├── README.md
-├── AP-WiFi.cfg
-├── Contraseñas_Acceso_Dispositivos.md
-├── LAPTOP1.cfg
-├── LAPTOP2.cfg
-├── PC-ADM1.cfg
-├── PC-ADM2.cfg
-├── PC-BIB1.cfg
-├── PC-BIB2.cfg
-├── PC-DOC1.cfg
-├── PC-DOC2.cfg
-├── PC-EST1.cfg
-├── PC-EST2.cfg
-├── PC-EST3.cfg
-├── PC-EST4.cfg
-├── SRV-DHCP.cfg
-├── SRV-DNS.cfg
-├── SW-Core.cfg
-├── SW1.cfg
-├── SW2.cfg
-└── SW3.cfg
-```
+## 📄 Archivos del proyecto
 
-## ⚙️ Tecnologías utilizadas
-
-- Cisco Packet Tracer.
-- Redes LAN.
-- VLAN.
-- IEEE 802.1Q.
-- Router-on-a-Stick.
-- DHCP.
-- DHCP Relay.
-- DNS.
-- Redes inalámbricas.
+- `Red_Empresarial_Segmentada.pkt`: archivo principal de la simulación en Cisco Packet Tracer.
+- `R1-Central_config.md`: documentación de la configuración del router principal.
+- `Configuraciones_Switches_y_Equipos.md`: documentación de las configuraciones de switches y equipos.
+- `Topologia_Red_Empresarial.html`: representación de la topología de red.
+- `Contrasenas_Acceso_Dispositivos.md`: documentación de credenciales del entorno de laboratorio.
 
 ## 🧪 Pruebas y validaciones
 
-Para comprobar el funcionamiento de la infraestructura se contemplan las siguientes pruebas:
+Se contemplan las siguientes verificaciones:
 
-1. Verificar la asignación de direcciones IP.
-2. Comprobar la conectividad entre los dispositivos y sus puertas de enlace.
-3. Validar la comunicación entre las diferentes VLAN.
-4. Comprobar el funcionamiento del servidor DHCP.
-5. Verificar la resolución de nombres mediante DNS.
-6. Revisar los enlaces troncales.
-7. Comprobar las configuraciones de seguridad.
+1. Comprobar la asignación de direcciones IP mediante DHCP.
+2. Verificar la conectividad de los equipos con sus puertas de enlace.
+3. Comprobar la comunicación entre las diferentes VLAN.
+4. Validar el funcionamiento del servidor DNS.
+5. Revisar los enlaces troncales y las subinterfaces del router.
+6. Verificar las reglas ACL.
+7. Comprobar el funcionamiento de Port Security.
+8. Validar la conexión inalámbrica protegida mediante WPA2-PSK.
 
-## 🔐 Seguridad
+## 🛠️ Tecnologías utilizadas
 
-Las credenciales documentadas en `Contraseñas_Acceso_Dispositivos.md` están destinadas exclusivamente al entorno académico de laboratorio.
+- Cisco Packet Tracer.
+- Cisco IOS.
+- VLAN.
+- IEEE 802.1Q.
+- Router-on-a-Stick.
+- DHCP y DHCP Relay.
+- DNS.
+- ACL.
+- Port Security.
+- WPA2-PSK.
 
-No se recomienda utilizar estas credenciales en infraestructuras reales.
-
-## 📚 Finalidad académica
-
-Este proyecto permite aplicar conceptos fundamentales de redes de computadores, segmentación lógica, administración de dispositivos Cisco y configuración de servicios de infraestructura.
+## 👨‍💻 Información académica
 
 **Proyecto:** Red Empresarial Segmentada.
 
 **Área:** Desarrollo de Sistemas de Comunicación.
 
-**Herramienta:** Cisco Packet Tracer.
+**Herramienta principal:** Cisco Packet Tracer.
+
+---
+
+*Proyecto desarrollado con fines académicos y de aprendizaje sobre diseño, configuración y administración de redes empresariales.*
